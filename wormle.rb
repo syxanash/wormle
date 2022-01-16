@@ -16,14 +16,14 @@ loop do
   answer = gets.chomp
 
   if answer == 'yes'
-    choosen_word = words_filtered.shuffle.first
+    choosen_word = words_filtered.sample
   else
     puts 'tell me your word:'
     choosen_word = gets.chomp
   end
 
   puts "the chosen word is #{choosen_word}"
-  puts "what color series did you get? [B]lack/[G]reen/[Y]ello"
+  puts 'what color series did you get? [B]lack/[G]reen/[Y]ello/ignore'
   answer_input = gets.chomp
   answer_sequence = answer_input.split('')
 
@@ -79,7 +79,7 @@ loop do
 
   pp words_filtered
 
-  if words_filtered.size == 0
+  if words_filtered.empty?
     puts 'finished all the words :('
     break
   end
