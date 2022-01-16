@@ -25,6 +25,11 @@ loop do
   puts "the chosen word is #{choosen_word}"
   puts 'what color series did you get? [B]lack/[G]reen/[Y]ello/ignore'
   answer_input = gets.chomp
+
+  if answer_input == 'ignore'
+    next
+  end
+
   answer_sequence = answer_input.split('')
 
   if answer_input == 'ggggg'
