@@ -39,12 +39,14 @@ loop do
 
   allowed_chars = []
 
+  # first scan to store the green and yellow characters
   answer_sequence.each_with_index do |box, i|
     if box == 'g' || box == 'y'
       allowed_chars.push(choosen_word[i])
     end
   end
 
+  # second scan deletes all the words by filtering the colors sequence
   answer_sequence.each_with_index do |box, i|
     temp_char = choosen_word[i]
     words_to_delete = []
