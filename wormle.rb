@@ -7,16 +7,16 @@ require 'pp'
 words_output = File.read('wordle_official_wordlist.txt')
 words_list = words_output.split("\n")
 
-words_filtered = words_list
-  .select { |word| word.size == 5 }
-  .select { |word| word.chars.first != word.chars.first.upcase }
+# words_list = words_list
+#   .select { |word| word.size == 5 }
+#   .select { |word| word.chars.first != word.chars.first.upcase }
 
 loop do
   puts 'would you like me to choose the word for you?'
   answer = gets.chomp
 
   if answer == 'yes'
-    choosen_word = words_filtered.sample
+    choosen_word = words_list.sample
   else
     puts 'tell me your word:'
     choosen_word = gets.chomp
@@ -54,7 +54,7 @@ loop do
     if box == 'g'
       puts "keep the #{temp_char} in position #{i}"
 
-      words_filtered.each do |temp_word|
+      words_list.each do |temp_word|
         if temp_word[i] != temp_char
           words_to_delete.push(temp_word)
         end
@@ -62,7 +62,7 @@ loop do
     elsif box == 'y'
       puts "ignore #{temp_char} from position #{i}"
 
-      words_filtered.each do |temp_word|
+      words_list.each do |temp_word|
         if !temp_word.include? temp_char
           words_to_delete.push(temp_word)
         end
@@ -74,19 +74,19 @@ loop do
     elsif box == 'b'
       puts "delete all words with #{temp_char}"
 
-      words_filtered.each do |temp_word|
+      words_list.each do |temp_word|
         if (temp_word.include? temp_char) && (!allowed_chars.include? temp_char)
           words_to_delete.push(temp_word)
         end
       end
     end
 
-    words_filtered = words_filtered.filter { |word| !words_to_delete.include? word }
+    words_list = words_list.filter { |word| !words_to_delete.include? word }
   end
 
-  pp words_filtered
+  pp words_list
 
-  if words_filtered.empty?
+  if words_list.empty?
     puts 'finished all the words :('
     break
   end
