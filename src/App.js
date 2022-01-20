@@ -236,7 +236,7 @@ function App() {
       <div className="nes-balloon from-left">
         <p><i>'cause cheating is always the last resort!</i></p>
       </div>
-      <h1>WORMLE<i className="nes-icon trophy is-sm"></i></h1>
+      <h1>WORMLE<span role="img" aria-label="worm">🐛</span></h1>
       <hr />
       <h3>Words available:</h3>
       <div className="nes-container is-dark wrap-container">
