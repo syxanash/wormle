@@ -15,3 +15,28 @@ body {
 .app-container {
   padding: 20px;
 }
+
+.nes-container {
+  height: 250px;
+  max-width: 700px;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding: 0.5em !important; /* sorry mother :( */ 
+}
+
+.words-container {
+  display: flex;
+  flex-flow: wrap;
+}
+
+.single-word {
+  padding-right: 0.5em;
+  padding-top: 0.5em;
+  padding-left: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.single-word:hover {
+  color: black;
+  background-color: white;
+}

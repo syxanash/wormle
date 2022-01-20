@@ -159,7 +159,13 @@ function App() {
   const interactivePart = useCallback(() => {
     const wordInput = (
       <React.Fragment><br /><h3>Try with:</h3><div className="nes-field">
-        <input type="text" className="nes-input" onChange={ changeChoosenWord } value={ choosenWord || '' } />
+        <input
+          type="text"
+          className="nes-input"
+          style={ { maxWidth: '700px' } }
+          onChange={ changeChoosenWord }
+          value={ choosenWord || '' }
+        />
       </div></React.Fragment>
     );
 
@@ -202,27 +208,38 @@ function App() {
     );
   }, [olderColorSequences, olderWords]);
 
+  const pickWord = useCallback((wordPicked) => {
+    setChoosenWord(wordPicked);
+  }, []);
+
   const populateTextArea = useCallback(() => {
     if (isCombinationCorrect) {
       return <p>Congrats the word of the day was {choosenWord}!</p>;
     }
 
+    const wordComponent = wordsList.map((word, index) => {
+      // eslint-disable-next-line react/jsx-no-bind
+      return <div key={ `word_${index}` } className="single-word" onClick={ () => pickWord(word) }>
+        <span>{ word }</span>
+      </div>;
+    });
+
     return (
-      <p>
-        {wordsList.length === 0 ? 'no more words :(' : wordsList.join(',\t')}
-      </p>
+      wordsList.length === 0
+        ? <p>no more words :(</p>
+        : <div className="words-container">{wordComponent}</div>
     );
-  }, [choosenWord, isCombinationCorrect, wordsList]);
+  }, [choosenWord, isCombinationCorrect, pickWord, wordsList]);
 
   return (
-    <div className='app-container'>
+    <div className="app-container">
       <div className="nes-balloon from-left">
         <p><i>'cause cheating is always the last resort!</i></p>
       </div>
       <h1>WORMLE<i className="nes-icon trophy is-sm"></i></h1>
       <hr />
       <h3>Words available:</h3>
-      <div className="nes-container is-dark" style={ { maxWidth: '800px', height: '300px', overflow: 'scroll' } }>
+      <div className="nes-container is-dark wrap-container">
         { populateTextArea() }
       </div>
       { olderWords.length === 0 ? null : generatePreviousWords() }
