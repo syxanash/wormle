@@ -19,6 +19,7 @@ function App() {
   const [wordsList, setWordsList] = useState(_.get(wordsListFile, 'words'));
   const [colorSequence, setColorSequence] = useState(Array(MAX_WORD_LENGTH).fill(0));
   const [olderWords, setOlderWords] = useState([]);
+  const [olderColorSequences, setOlderColorSequences] = useState([]);
   const [choosenWord, setChoosenWord] = useState('');
 
   const jsConfetti = useMemo(() => new JSConfetti(), []);
@@ -52,6 +53,7 @@ function App() {
     setWordsList(_.get(wordsListFile, 'words'));
     setColorSequence(Array(MAX_WORD_LENGTH).fill(0));
     setOlderWords([]);
+    setOlderColorSequences([]);
     setChoosenWord(_.first(_.shuffle(newWordsList)));
   }, []);
 
@@ -62,6 +64,7 @@ function App() {
 
     if (!isCombinationCorrect) {
       setOlderWords([...olderWords, choosenWord]);
+      setOlderColorSequences([...olderColorSequences, colorSequence]);
     }
 
     const wordsListClone = _.clone(wordsList);
@@ -104,7 +107,7 @@ function App() {
 
     setWordsList(wordsListClone.filter((word) => !wordsToDelete.includes(word)));
     setChoosenWord(_.first(_.shuffle(wordsListClone)));
-  }, [wordsList, olderWords, choosenWord, colorSequence, isCombinationCorrect]);
+  }, [wordsList, isCombinationCorrect, colorSequence, olderWords, choosenWord, olderColorSequences]);
 
   const changeChoosenWord = useCallback((newValue) => {
     const inputValue = newValue.target.value;
@@ -172,7 +175,19 @@ function App() {
   }, [changeChoosenWord, choosenWord, generateSequence, isCombinationCorrect]);
 
   const generatePreviousWords = useCallback(() => {
-    const liComponents = olderWords.map((word, i) => <li key={ `li_${i}` }>{word.toUpperCase()}</li>);
+    const liComponents = olderWords.map((word, i) => {
+      const tempWord = word.toUpperCase();
+
+      const highlightColor = ['black', '#f7d51d', '#4aa52e'];
+
+      const spansComponents = tempWord.split('').map((char, index) => {
+        return <React.Fragment key={ `char_${index}` }>
+          <span style={ { color: highlightColor[olderColorSequences[i][index]] } }>{ char }</span>
+        </React.Fragment>;
+      });
+
+      return <li key={ `li_${i}` }>{spansComponents}</li>;
+    });
 
     return (
       <React.Fragment>
@@ -185,7 +200,7 @@ function App() {
         </div>
       </React.Fragment>
     );
-  }, [olderWords]);
+  }, [olderColorSequences, olderWords]);
 
   const populateTextArea = useCallback(() => {
     if (isCombinationCorrect) {
