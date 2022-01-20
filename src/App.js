@@ -8,25 +8,27 @@ import './App.css';
 import 'nes.css/css/nes.min.css';
 import wordsListFile from './assets/wordlist.json';
 
+const MAX_WORD_LENGTH = 5;
+const COLOR_STATUSES = {
+  'BLACK': 0,
+  'YELLOW': 1,
+  'GREEN': 2,
+};
+
 function App() {
   const [wordsList, setWordsList] = useState(_.get(wordsListFile, 'words'));
-  const [colorSequence, setColorSequence] = useState(Array(5).fill(0));
+  const [colorSequence, setColorSequence] = useState(Array(MAX_WORD_LENGTH).fill(0));
   const [olderWords, setOlderWords] = useState([]);
-  const [colorStatuses] = useState({
-    'BLACK': 0,
-    'YELLOW': 1,
-    'GREEN': 2,
-  });
   const [choosenWord, setChoosenWord] = useState('');
 
   const jsConfetti = useMemo(() => new JSConfetti(), []);
 
   const isCombinationCorrect = useMemo(() => {
-    return _.every(colorSequence, (sequence) => sequence === colorStatuses.GREEN);
-  }, [colorSequence, colorStatuses]);
+    return _.every(colorSequence, (sequence) => sequence === COLOR_STATUSES.GREEN);
+  }, [colorSequence]);
 
   const guessButtonDisabled = useMemo(() => {
-    return wordsList.length === 0 || choosenWord.length < 5 || isCombinationCorrect;
+    return wordsList.length === 0 || choosenWord.length < MAX_WORD_LENGTH || isCombinationCorrect;
   }, [wordsList, choosenWord, isCombinationCorrect]);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ function App() {
     const newWordsList = _.get(wordsListFile, 'words');
 
     setWordsList(_.get(wordsListFile, 'words'));
-    setColorSequence(Array(5).fill(0));
+    setColorSequence(Array(MAX_WORD_LENGTH).fill(0));
     setOlderWords([]);
     setChoosenWord(_.first(_.shuffle(newWordsList)));
   }, []);
@@ -75,13 +77,13 @@ function App() {
     _.each(colorSequence, (color, index) => {
       const tempChar = choosenWord[index];
 
-      if (color === colorStatuses.GREEN) {
+      if (color === COLOR_STATUSES.GREEN) {
         _.each(wordsListClone, (currentWord) => {
           if (currentWord[index] !== tempChar) {
             wordsToDelete.push(currentWord);
           }
         });
-      } else if (color === colorStatuses.YELLOW) {
+      } else if (color === COLOR_STATUSES.YELLOW) {
         _.each(wordsListClone, (currentWord) => {
           if (!currentWord.includes(tempChar)) {
             wordsToDelete.push(currentWord);
@@ -91,7 +93,7 @@ function App() {
             wordsToDelete.push(currentWord);
           }
         });
-      } else if (color === colorStatuses.BLACK) {
+      } else if (color === COLOR_STATUSES.BLACK) {
         _.each(wordsListClone, (currentWord) => {
           if (currentWord.includes(tempChar) && !charsAllowed.includes(tempChar)) {
             wordsToDelete.push(currentWord);
@@ -102,11 +104,11 @@ function App() {
 
     setWordsList(wordsListClone.filter((word) => !wordsToDelete.includes(word)));
     setChoosenWord(_.first(_.shuffle(wordsListClone)));
-  }, [wordsList, olderWords, choosenWord, colorSequence, colorStatuses, isCombinationCorrect]);
+  }, [wordsList, olderWords, choosenWord, colorSequence, isCombinationCorrect]);
 
   const changeChoosenWord = useCallback((newValue) => {
     const inputValue = newValue.target.value;
-    if (inputValue.length <= 5) {
+    if (inputValue.length <= MAX_WORD_LENGTH) {
       setChoosenWord(inputValue.toLowerCase());
     }
   }, []);
@@ -125,16 +127,11 @@ function App() {
       'is-success'
     ];
 
-    const colorSequenceButtons = Array(5).fill(0).map((_, i) => {
-      const newValue = (colorSequence[i] + 1) % Object.keys(colorStatuses).length;
-
-      let letter = '';
-
-      if (!!choosenWord && i < choosenWord.length) {
-        letter = choosenWord[i].toUpperCase();
-      }
+    const colorSequenceButtons = Array(MAX_WORD_LENGTH).fill(0).map((_, i) => {
+      const newValue = (colorSequence[i] + 1) % Object.keys(COLOR_STATUSES).length;
 
       const isSequenceButtonDisabled = i > choosenWord.length - 1;
+      const textValue = isSequenceButtonDisabled ? '' : choosenWord[i].toUpperCase();
 
       const sequenceButtonStyle = isSequenceButtonDisabled
         ? 'is-disabled'
@@ -149,12 +146,12 @@ function App() {
           onClick={ () => changeSequence(i, newValue) }
           className={ `nes-btn ${sequenceButtonStyle}` }
           style={ { width: '50px', height: '50px' } }
-        >{letter}</button>
+        >{textValue}</button>
       );
     });
 
     return colorSequenceButtons;    
-  }, [changeSequence, colorSequence, colorStatuses, choosenWord]);
+  }, [changeSequence, colorSequence, choosenWord]);
 
   const interactivePart = useCallback(() => {
     const wordInput = (
