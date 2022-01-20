@@ -69,7 +69,7 @@ function App() {
     const wordsToDelete = [];
 
     _.each(colorSequence, (color, index) => {
-      if (color > 0) {
+      if (color !== COLOR_STATUSES.BLACK) {
         charsAllowed.push(choosenWord[index]);
       }
     });
