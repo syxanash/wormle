@@ -71,23 +71,23 @@ function App() {
     const charsAllowed = [];
     const wordsToDelete = [];
 
-    _.each(colorSequence, (color, index) => {
+    colorSequence.forEach((color, index) => {
       if (color !== COLOR_STATUSES.BLACK) {
         charsAllowed.push(choosenWord[index]);
       }
     });
 
-    _.each(colorSequence, (color, index) => {
+    colorSequence.forEach((color, index) => {
       const tempChar = choosenWord[index];
 
       if (color === COLOR_STATUSES.GREEN) {
-        _.each(wordsListClone, (currentWord) => {
+        wordsListClone.forEach((currentWord) => {
           if (currentWord[index] !== tempChar) {
             wordsToDelete.push(currentWord);
           }
         });
       } else if (color === COLOR_STATUSES.YELLOW) {
-        _.each(wordsListClone, (currentWord) => {
+        wordsListClone.forEach((currentWord) => {
           if (!currentWord.includes(tempChar)) {
             wordsToDelete.push(currentWord);
           }
@@ -97,7 +97,7 @@ function App() {
           }
         });
       } else if (color === COLOR_STATUSES.BLACK) {
-        _.each(wordsListClone, (currentWord) => {
+        wordsListClone.forEach((currentWord) => {
           if (currentWord.includes(tempChar) && !charsAllowed.includes(tempChar)) {
             wordsToDelete.push(currentWord);
           }
