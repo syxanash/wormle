@@ -15,14 +15,14 @@ const COLOR_STATUSES = {
   'GREEN': 2,
 };
 
+const jsConfetti = new JSConfetti();
+
 function App() {
   const [wordsList, setWordsList] = useState(_.get(wordsListFile, 'words'));
   const [colorSequence, setColorSequence] = useState(Array(MAX_WORD_LENGTH).fill(0));
   const [olderWords, setOlderWords] = useState([]);
   const [olderColorSequences, setOlderColorSequences] = useState([]);
   const [choosenWord, setChoosenWord] = useState('');
-
-  const jsConfetti = useMemo(() => new JSConfetti(), []);
 
   const isCombinationCorrect = useMemo(() => {
     return _.every(colorSequence, (sequence) => sequence === COLOR_STATUSES.GREEN);
