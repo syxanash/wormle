@@ -45,7 +45,7 @@ function App() {
         ],
       });
     }
-  }, [isCombinationCorrect, jsConfetti]);
+  }, [isCombinationCorrect]);
 
   const startOver = useCallback(() => {
     const newWordsList = _.get(wordsListFile, 'words');
