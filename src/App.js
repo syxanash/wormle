@@ -18,7 +18,7 @@ const COLOR_STATUSES = {
 const jsConfetti = new JSConfetti();
 
 function App() {
-  const [wordsList, setWordsList] = useState(_.get(wordsListFile, 'words'));
+  const [wordsList, setWordsList] = useState(_.shuffle(_.get(wordsListFile, 'words')));
   const [colorSequence, setColorSequence] = useState(Array(MAX_WORD_LENGTH).fill(0));
   const [olderWords, setOlderWords] = useState([]);
   const [olderColorSequences, setOlderColorSequences] = useState([]);
@@ -33,7 +33,7 @@ function App() {
   }, [wordsList, choosenWord, isCombinationCorrect]);
 
   useEffect(() => {
-    const choosenWord = _.first(_.shuffle(wordsList));
+    const choosenWord = _.first(wordsList);
     setChoosenWord(choosenWord);
   }, [wordsList]);
 
@@ -48,13 +48,13 @@ function App() {
   }, [isCombinationCorrect]);
 
   const startOver = useCallback(() => {
-    const newWordsList = _.get(wordsListFile, 'words');
+    const newWordsList = _.shuffle(_.get(wordsListFile, 'words'));
 
-    setWordsList(_.get(wordsListFile, 'words'));
+    setWordsList(newWordsList);
     setColorSequence(Array(MAX_WORD_LENGTH).fill(0));
     setOlderWords([]);
     setOlderColorSequences([]);
-    setChoosenWord(_.first(_.shuffle(newWordsList)));
+    setChoosenWord(_.first(newWordsList));
   }, []);
 
   const guessWord = useCallback(() => {
@@ -106,7 +106,6 @@ function App() {
     });
 
     setWordsList(wordsListClone.filter((word) => !wordsToDelete.includes(word)));
-    setChoosenWord(_.first(_.shuffle(wordsListClone)));
   }, [wordsList, isCombinationCorrect, colorSequence, olderWords, choosenWord, olderColorSequences]);
 
   const changeChoosenWord = useCallback((newValue) => {
