@@ -17,6 +17,8 @@ const COLOR_STATUSES = {
 
 const jsConfetti = new JSConfetti();
 
+const findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) !== index);
+
 function App() {
   const [wordsList, setWordsList] = useState(_.shuffle(_.get(wordsListFile, 'words')));
   const [colorSequence, setColorSequence] = useState(Array(MAX_WORD_LENGTH).fill(0));
@@ -33,9 +35,19 @@ function App() {
   }, [wordsList, choosenWord, isCombinationCorrect]);
 
   useEffect(() => {
-    const choosenWord = _.first(wordsList);
+    const currentIteration = olderColorSequences.length;
+
+    let choosenWord = _.first(wordsList);
+
+    // choose a word that doesn't have duplicates for the first 2 guesses
+    while (choosenWord !== undefined &&
+      findDuplicates(choosenWord.split('')).length !== 0 &&
+      currentIteration < 2) {
+      choosenWord = _.first(_.shuffle(wordsList));
+    }
+
     setChoosenWord(choosenWord);
-  }, [wordsList]);
+  }, [olderColorSequences, wordsList]);
 
   useEffect(() => {
     if (isCombinationCorrect) {
