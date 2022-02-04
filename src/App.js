@@ -39,6 +39,19 @@ function App() {
 
     let choosenWord = _.first(wordsList);
 
+    if (currentIteration === 0) {
+      // yeah I'm sure there's a good regex for this but I don't know any atm :)
+      const goodFirstWords = wordsList.filter((word) => {
+        return word.includes('e')
+          && word.includes('a')
+          && word.includes('r')
+          && (word.includes('i') || word.includes('o') || word.includes('t'))
+					&& findDuplicates(word.split('')).length === 0;
+      });
+
+      choosenWord = _.sample(goodFirstWords);
+    }
+
     // choose a word that doesn't have duplicates for the first 2 guesses
     while (choosenWord !== undefined &&
       findDuplicates(choosenWord.split('')).length !== 0 &&
@@ -122,6 +135,10 @@ function App() {
     });
 
     setWordsList(wordsListClone.filter((word) => !wordsToDelete.includes(word)));
+
+    // remove the yellows from the color sequence but keep the greens
+    const newColorSequence = colorSequence.map(color => color === COLOR_STATUSES.YELLOW ? COLOR_STATUSES.BLACK : color);
+    setColorSequence(newColorSequence);
   }, [wordsList, isCombinationCorrect, colorSequence, olderWords, choosenWord, olderColorSequences]);
 
   const changeChoosenWord = useCallback((newValue) => {
