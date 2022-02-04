@@ -41,6 +41,11 @@ body {
   background-color: white;
 }
 
+.single-word:active {
+  color: black;
+  background-color: yellow;
+}
+
 .choosen-word {
   color: black;
   background-color: aqua;
