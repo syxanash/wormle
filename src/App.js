@@ -251,7 +251,8 @@ function App() {
 
     const wordComponent = wordsList.map((word, index) => {
       // eslint-disable-next-line react/jsx-no-bind
-      return <div key={ `word_${index}` } className="single-word" onClick={ () => pickWord(word) }>
+      const classNames = `single-word ${word === choosenWord ? 'choosen-word' : ''}`;
+      return <div key={ `word_${index}` } className={ classNames } onClick={ () => pickWord(word) }>
         <span>{ word }</span>
       </div>;
     });
