@@ -43,21 +43,21 @@ function App() {
     while (choosenWord !== undefined &&
       findDuplicates(choosenWord.split('')).length !== 0 &&
       currentIteration < 2) {
-      choosenWord = _.first(_.shuffle(wordsList));
+      choosenWord = _.sample(wordsList);
     }
 
     setChoosenWord(choosenWord);
   }, [olderColorSequences, wordsList]);
 
   useEffect(() => {
-    if (isCombinationCorrect) {
+    if (isCombinationCorrect || wordsList.length === 1) {
       jsConfetti.addConfetti({
         confettiColors: [
           '#462066', '#FFB85F', '#FF7A5A', '#00AAA0', '#8ED2C9', '#FCF4D9',
         ],
       });
     }
-  }, [isCombinationCorrect]);
+  }, [isCombinationCorrect, wordsList]);
 
   const startOver = useCallback(() => {
     const newWordsList = _.shuffle(_.get(wordsListFile, 'words'));
@@ -111,6 +111,10 @@ function App() {
       } else if (color === COLOR_STATUSES.BLACK) {
         wordsListClone.forEach((currentWord) => {
           if (currentWord.includes(tempChar) && !charsAllowed.includes(tempChar)) {
+            wordsToDelete.push(currentWord);
+          }
+
+          if (charsAllowed.includes(tempChar) && currentWord[index] === tempChar) {
             wordsToDelete.push(currentWord);
           }
         });
