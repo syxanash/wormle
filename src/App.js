@@ -245,7 +245,7 @@ function App() {
   }, []);
 
   const populateTextArea = useCallback(() => {
-    if (isCombinationCorrect) {
+    if (isCombinationCorrect || wordsList.length === 1) {
       return <p>Congrats the word of the day was {choosenWord}!</p>;
     }
 
