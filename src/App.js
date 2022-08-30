@@ -188,16 +188,25 @@ function App() {
     return colorSequenceButtons;    
   }, [changeSequence, colorSequence, choosenWord]);
 
+  const clearWord = useCallback(() => {
+    setChoosenWord('');
+  }, []);
+
   const interactivePart = useCallback(() => {
     const wordInput = (
       <React.Fragment><br /><h3>Try with:</h3><div className="nes-field">
-        <input
-          type="text"
-          className="nes-input"
-          style={ { maxWidth: '700px' } }
-          onChange={ changeChoosenWord }
-          value={ choosenWord || '' }
-        />
+        <div style={ { display: 'flex', maxWidth: '700px' } }>
+          <input
+            type="text"
+            className="nes-input"
+            style={ { marginRight: '20px' } }
+            onChange={ changeChoosenWord }
+            value={ choosenWord || '' }
+          />
+          <button className="nes-btn is-normal" style={ { width: '60px' } } onClick={ clearWord }>
+            <i className="nes-icon close is-small"></i>
+          </button>
+        </div>
       </div></React.Fragment>
     );
 
@@ -210,7 +219,7 @@ function App() {
         <br />
       </React.Fragment>
     );
-  }, [changeChoosenWord, choosenWord, generateSequence, isCombinationCorrect]);
+  }, [changeChoosenWord, choosenWord, clearWord, generateSequence, isCombinationCorrect]);
 
   const generatePreviousWords = useCallback(() => {
     const liComponents = olderWords.map((word, i) => {
